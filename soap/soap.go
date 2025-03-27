@@ -32,6 +32,7 @@ type SOAPEnvelopeResponse struct {
 type SOAPEnvelope struct {
 	XMLName xml.Name `xml:"soap:Envelope"`
 	XmlNS   string   `xml:"xmlns:soap,attr"`
+	XmlAPI  string   `xml:"xmlns:api,attr"`
 
 	Header *SOAPHeader
 	Body   SOAPBody
@@ -254,12 +255,14 @@ type options struct {
 	httpHeaders      map[string]string
 	mtom             bool
 	mma              bool
+	nsApi            string
 }
 
 var defaultOptions = options{
 	timeout:          time.Duration(30 * time.Second),
 	contimeout:       time.Duration(90 * time.Second),
 	tlshshaketimeout: time.Duration(15 * time.Second),
+	nsApi:            "",
 }
 
 // A Option sets options such as credentials, tls, etc.
@@ -294,6 +297,13 @@ func WithRequestTimeout(t time.Duration) Option {
 func WithBasicAuth(login, password string) Option {
 	return func(o *options) {
 		o.auth = &basicAuth{Login: login, Password: password}
+	}
+}
+
+// WithApiNamespace sets API namespace
+func WithApiNamespace(nsApi string) Option {
+	return func(o *options) {
+		o.nsApi = nsApi
 	}
 }
 
@@ -427,7 +437,8 @@ func (s *Client) call(ctx context.Context, soapAction string, request, response 
 	retAttachments *[]MIMEMultipartAttachment) error {
 	// SOAP envelope capable of namespace prefixes
 	envelope := SOAPEnvelope{
-		XmlNS: XmlNsSoapEnv,
+		XmlNS:  XmlNsSoapEnv,
+		XmlAPI: s.opts.nsApi,
 	}
 
 	if s.headers != nil && len(s.headers) > 0 {
@@ -526,7 +537,7 @@ func (s *Client) call(ctx context.Context, soapAction string, request, response 
 	}
 
 	var mmaBoundary string
-	if s.opts.mma{
+	if s.opts.mma {
 		mmaBoundary, err = getMmaHeader(res.Header.Get("Content-Type"))
 		if err != nil {
 			return err

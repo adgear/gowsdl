@@ -5,8 +5,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hooklift/gowsdl/example/gen"
-	"github.com/hooklift/gowsdl/soap"
+	"github.com/ssapaliga/gowsdl/example/gen"
+	"github.com/ssapaliga/gowsdl/soap"
 )
 
 func ExampleBasicUsage() {
@@ -25,6 +25,7 @@ func ExampleWithOptions() {
 		soap.WithTimeout(time.Second*5),
 		soap.WithBasicAuth("usr", "psw"),
 		soap.WithTLS(&tls.Config{InsecureSkipVerify: true}),
+		soap.WithApiNamespace("http://example.com/"),
 	)
 	service := gen.NewStockQuotePortType(client)
 	reply, err := service.GetLastTradePrice(&gen.TradePriceRequest{})
