@@ -1,4 +1,4 @@
-module github.com/ssapaliga/gowsdl
+module github.com/adgear/gowsdl
 
 go 1.15
 

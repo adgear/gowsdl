@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/ssapaliga/gowsdl/example/server/gen"
-	"github.com/ssapaliga/gowsdl/soap"
+	"github.com/adgear/gowsdl/example/server/gen"
+	"github.com/adgear/gowsdl/soap"
 )
 
 var done = make(chan struct{})

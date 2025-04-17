@@ -5,7 +5,7 @@ package gen
 import (
 	"context"
 	"encoding/xml"
-	"github.com/ssapaliga/gowsdl/soap"
+	"github.com/adgear/gowsdl/soap"
 	"time"
 )
 
